@@ -1,0 +1,4 @@
+package UnitTest
+
+interface UnitTest {
+}
