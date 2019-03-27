@@ -1,4 +1,0 @@
-package UnitTest
-
-interface UnitTest {
-}
