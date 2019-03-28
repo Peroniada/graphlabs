@@ -47,8 +47,14 @@ class GraphMachineSpec extends Specification {
         given: "a graph"
         when: "user retrieves for adjacency matrix"
         def adjacencyMatrix = graphModel.adjacencyMatrix
+        def expectedMatrix = [
+                [0, 1, 0, 1],
+                [1, 0, 1, 1],
+                [0, 1, 0, 1],
+                [1, 1, 1, 0]
+        ] as Integer[][]
         then:
-        adjacencyMatrix == [[0,1,0,1][1,0,1,1][0,1,0,1][1,1,1,0]] as Integer[][]
+        adjacencyMatrix == expectedMatrix
     }
 //      Jako użytkownik chcę mieć możliwość wypisania macierzy incydencji M
 
