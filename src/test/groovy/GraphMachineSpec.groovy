@@ -21,8 +21,8 @@ class GraphMachineSpec extends Specification {
 
     def 'Should return list of vertices'() {
         given: "a graph"
-        when: "user retrieves list of verices"
-        def vertsList = graphModel.vertsList
+        when: "user retrieves list of vertices"
+        def vertsList = graphModel.verticesList
         then:
         vertsList == [1,2,3,4]
     }
@@ -54,8 +54,20 @@ class GraphMachineSpec extends Specification {
                 [1, 1, 1, 0]
         ] as Integer[][]
         then:
-        adjacencyMatrix == expectedMatrix
+        expectedMatrix == adjacencyMatrix
     }
-//      Jako użytkownik chcę mieć możliwość wypisania macierzy incydencji M
 
+    def 'Should return an incidence matrix' () {
+        given: "a graph"
+        when: "user retrieves for incidence matrix"
+        def incidenceMatrix = graphModel.incidenceMatrix
+        def expectedMatrix = [
+                [1, 0, 0, 1, 0],
+                [1, 1, 0, 0, 1],
+                [0, 1, 1, 0, 0],
+                [0, 0, 1, 1, 1]
+        ] as Integer[][]
+        then:
+        expectedMatrix == incidenceMatrix
+    }
 }
