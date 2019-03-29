@@ -7,14 +7,14 @@ class GraphMachineSpec extends Specification {
     GraphModel graphModel
 
     def setup() {
-        edges = [new Pair(1,2), new Pair(2,3), new Pair(3,4), new Pair(1,4), new Pair(2,4)]
+        edges = [new Pair(1, 2), new Pair(2, 3), new Pair(3, 4), new Pair(1, 4), new Pair(2, 4)]
         graphModel = new GraphModel(4, 5, edges as ArrayList<Pair<Integer, Integer>>)
     }
 
     def 'Should return the number of verticies'() {
         given: "a graph"
         when: "user retrieves number of verts"
-        int verts = graphModel.numberOfVertices
+        int verts = graphModel.order
         then:
         verts == 4
     }
@@ -24,18 +24,18 @@ class GraphMachineSpec extends Specification {
         when: "user retrieves list of vertices"
         def vertsList = graphModel.verticesList
         then:
-        vertsList == [1,2,3,4]
+        vertsList == [1, 2, 3, 4]
     }
 
     def 'Should return the number of edges'() {
         given: "a graph"
         when: "user retrieves for number of edges"
-        def numberOfEdges = graphModel.numberOfEdges
+        def numberOfEdges = graphModel.size
         then:
         numberOfEdges == 5
     }
 
-    def 'Should return list of edges' () {
+    def 'Should return list of edges'() {
         given: "a graph"
         when: "user retrieves for list of edges"
         def edges = graphModel.edgesList
@@ -43,7 +43,7 @@ class GraphMachineSpec extends Specification {
         edges == ["1-2", "2-3", "3-4", "1-4", "2-4"]
     }
 
-    def 'Should return an adjacency matrix' () {
+    def 'Should return an adjacency matrix'() {
         given: "a graph"
         when: "user retrieves for adjacency matrix"
         def adjacencyMatrix = graphModel.adjacencyMatrix
@@ -57,7 +57,7 @@ class GraphMachineSpec extends Specification {
         expectedMatrix == adjacencyMatrix
     }
 
-    def 'Should return an incidence matrix' () {
+    def 'Should return an incidence matrix'() {
         given: "a graph"
         when: "user retrieves for incidence matrix"
         def incidenceMatrix = graphModel.incidenceMatrix
@@ -69,5 +69,31 @@ class GraphMachineSpec extends Specification {
         ] as Integer[][]
         then:
         expectedMatrix == incidenceMatrix
+    }
+
+    def 'Should return the list of vertices degrees'() {
+        given: "a graph"
+        when: "user retrieves for vertices degrees"
+        def verticesDegrees = graphModel.verticesDegrees
+        def expectedDegrees = [
+                new Pair(1, 2),
+                new Pair(2, 3),
+                new Pair(3, 2),
+                new Pair(4, 3)
+        ] as List<Pair>
+        then:
+        expectedDegrees == verticesDegrees
+    }
+
+    def 'Should return the sequence of graph degrees'() {
+        given: "a graph"
+        when: "user retrieves for sequence of graph degrees"
+        def graphDegreesSequence = graphModel.degreesSequence
+        def expectedDegreesSequence = [
+                2, 2, 3, 3
+        ] as List<Integer>
+        then:
+        expectedDegreesSequence == graphDegreesSequence
+
     }
 }

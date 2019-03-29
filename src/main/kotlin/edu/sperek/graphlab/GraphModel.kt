@@ -1,18 +1,33 @@
 package edu.sperek.graphlab
 
-class GraphModel(val numberOfVertices: Int, val numberOfEdges: Int, private val edges: List<Pair<Int, Int>>) {
+class GraphModel(val order: Int, val size: Int, private val edges: List<Pair<Int, Int>>) {
 
     val edgesList: List<String>
         get() = edges.map { edge -> "${edge.first}-${edge.second}" }
 
     val verticesList: List<Int>
-        get() = predicateVertices()
+        get() = determineVertices()
 
     val adjacencyMatrix: Array<Array<Int>>
-        get() = fillAdjacencyOf(emptyMatrix(numberOfVertices, numberOfVertices))
+        get() = fillAdjacencyOf(emptyMatrix(order, order))
 
     val incidenceMatrix: Array<Array<Int>>
-        get() = fillIncidenceOf(emptyMatrix(numberOfVertices, numberOfEdges))
+        get() = fillIncidenceOf(emptyMatrix(order, size))
+
+    val verticesDegrees: List<Pair<Int, Int>>
+        get() = determineVerticesDegrees()
+
+    val degreesSequence: List<Int>
+        get() = determineDegreesSequence()
+
+    private fun determineVerticesDegrees(): List<Pair<Int, Int>> {
+        return adjacencyMatrix.mapIndexed { index, row -> Pair(index + 1, row.sum()) }
+    }
+
+    private fun determineDegreesSequence(): List<Int> {
+        return adjacencyMatrix.map { row -> row.sum() }
+                .sorted()
+    }
 
     private fun fillAdjacencyOf(matrix: Array<Array<Int>>): Array<Array<Int>> {
         edges.forEach { edge ->
@@ -35,7 +50,7 @@ class GraphModel(val numberOfVertices: Int, val numberOfEdges: Int, private val 
         return matrix
     }
 
-    private fun predicateVertices(): List<Int> {
+    private fun determineVertices(): List<Int> {
         val vertices = mutableListOf<Int>()
         edges.forEach { pair -> vertices.addAll(pair.toList()) }
         return vertices.distinct().sorted()
