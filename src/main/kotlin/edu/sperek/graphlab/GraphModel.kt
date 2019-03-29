@@ -20,14 +20,11 @@ class GraphModel(val order: Int, val size: Int, private val edges: List<Pair<Int
     val degreesSequence: List<Int>
         get() = determineDegreesSequence()
 
-    private fun determineVerticesDegrees(): List<Pair<Int, Int>> {
-        return adjacencyMatrix.mapIndexed { index, row -> Pair(index + 1, row.sum()) }
-    }
+    val isSimple: Boolean
+        get() = edges.none { edge -> edge.first == edge.second }
 
-    private fun determineDegreesSequence(): List<Int> {
-        return adjacencyMatrix.map { row -> row.sum() }
-                .sorted()
-    }
+    val fulfillingEdges: List<Pair<Int, Int>>
+        get() = determineFulfillingEdges()
 
     private fun fillAdjacencyOf(matrix: Array<Array<Int>>): Array<Array<Int>> {
         edges.forEach { edge ->
@@ -54,6 +51,27 @@ class GraphModel(val order: Int, val size: Int, private val edges: List<Pair<Int
         val vertices = mutableListOf<Int>()
         edges.forEach { pair -> vertices.addAll(pair.toList()) }
         return vertices.distinct().sorted()
+    }
+
+    private fun determineVerticesDegrees(): List<Pair<Int, Int>> {
+        return adjacencyMatrix.mapIndexed { index, row -> Pair(index + 1, row.sum()) }
+    }
+
+    private fun determineDegreesSequence(): List<Int> {
+        return adjacencyMatrix.map { row -> row.sum() }
+                .sorted()
+    }
+
+    private fun determineFulfillingEdges(): MutableList<Pair<Int, Int>> {
+        val adjMatrix = adjacencyMatrix
+        val fulfillingEdges = mutableListOf<Pair<Int, Int>>()
+        for (row in 1..order) {
+            for (col in (row + 1)..order) {
+                val matrixCellValue = adjMatrix[row - 1][col - 1]
+                if (matrixCellValue == 0) fulfillingEdges.add(Pair(row, col))
+            }
+        }
+        return fulfillingEdges
     }
 
     private fun emptyMatrix(rows: Int, columns: Int): Array<Array<Int>> {

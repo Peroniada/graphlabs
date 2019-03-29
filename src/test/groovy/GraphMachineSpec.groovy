@@ -96,4 +96,22 @@ class GraphMachineSpec extends Specification {
         expectedDegreesSequence == graphDegreesSequence
 
     }
+
+    def 'Should check if graph is simple' () {
+        given: "a graph"
+        when: "user checks if graph is simple"
+        def isSimple = graphModel.isSimple()
+        def expected = true
+        then:
+        expected == isSimple
+    }
+
+    def 'Should return needed edges to make complete graph ' () {
+        given: "a graph"
+        when: "user checks for edges needed to make complete graph"
+        def fulfillingEdges = graphModel.fulfillingEdges
+        def expected = [new Pair(1,3)] as List<Pair>
+        then:
+        fulfillingEdges == expected
+    }
 }
