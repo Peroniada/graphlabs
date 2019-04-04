@@ -7,5 +7,5 @@ import org.springframework.boot.runApplication
 class GraphlabApplication
 
 fun main(args: Array<String>) {
-	runApplication<GraphlabApplication>(*args)
+    runApplication<GraphlabApplication>(*args)
 }
