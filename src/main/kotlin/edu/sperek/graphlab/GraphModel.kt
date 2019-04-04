@@ -1,11 +1,11 @@
 package edu.sperek.graphlab
 
-class GraphModel(val order: Int, val size: Int, private val edges: List<Pair<Int, Int>>) {
+class GraphModel(val order: Int, val size: Int, private val edges: List<Edge>) {
 
     val edgesList: List<String>
-        get() = edges.map { edge -> "${edge.first}-${edge.second}" }
+        get() = edges.map { edge -> edge.toString() }
 
-    val verticesList: List<Int>
+    val verticesList: List<Vertex>
         get() = determineVertices()
 
     val adjacencyMatrix: Array<Array<Int>>
@@ -14,23 +14,23 @@ class GraphModel(val order: Int, val size: Int, private val edges: List<Pair<Int
     val incidenceMatrix: Array<Array<Int>>
         get() = fillIncidenceOf(emptyMatrix(order, size))
 
-    val verticesDegrees: List<Pair<Int, Int>>
+    val verticesDegrees: List<Pair<Vertex, Int>>
         get() = determineVerticesDegrees()
 
     val degreesSequence: List<Int>
         get() = determineDegreesSequence()
 
     val isSimple: Boolean
-        get() = edges.none { edge -> edge.first == edge.second }
+        get() = edges.none { edge -> edge.start == edge.end }
 
-    val fulfillingEdges: List<Pair<Int, Int>>
+    val fulfillingEdges: List<Edge>
         get() = determineFulfillingEdges()
 
     private fun fillAdjacencyOf(matrix: Array<Array<Int>>): Array<Array<Int>> {
         edges.forEach { edge ->
             run {
-                matrix[edge.first - 1][edge.second - 1] += 1
-                matrix[edge.second - 1][edge.first - 1] += 1
+                matrix[edge.startPosition - 1][edge.endPosition - 1] += 1
+                matrix[edge.endPosition - 1][edge.startPosition - 1] += 1
             }
         }
         return matrix
@@ -40,21 +40,21 @@ class GraphModel(val order: Int, val size: Int, private val edges: List<Pair<Int
         edges.forEachIndexed { index, edge ->
             run {
                 verticesList.forEach { vertex ->
-                    matrix[vertex - 1][index] = if (edge.toList().contains(vertex)) 1 else 0
+                    matrix[vertex.position - 1][index] = if (edge.contains(vertex)) 1 else 0
                 }
             }
         }
         return matrix
     }
 
-    private fun determineVertices(): List<Int> {
-        val vertices = mutableListOf<Int>()
-        edges.forEach { pair -> vertices.addAll(pair.toList()) }
-        return vertices.distinct().sorted()
+    private fun determineVertices(): List<Vertex> {
+        val vertices = mutableListOf<Vertex>()
+        edges.forEach { edge -> vertices.add(edge.start); vertices.add(edge.end) }
+        return vertices.distinct().sortedBy { vertex -> vertex.position }
     }
 
-    private fun determineVerticesDegrees(): List<Pair<Int, Int>> {
-        return adjacencyMatrix.mapIndexed { index, row -> Pair(index + 1, row.sum()) }
+    private fun determineVerticesDegrees(): List<Pair<Vertex, Int>> {
+        return adjacencyMatrix.mapIndexed { index, row -> Pair(Vertex(index + 1), row.sum()) }
     }
 
     private fun determineDegreesSequence(): List<Int> {
@@ -62,13 +62,13 @@ class GraphModel(val order: Int, val size: Int, private val edges: List<Pair<Int
                 .sorted()
     }
 
-    private fun determineFulfillingEdges(): MutableList<Pair<Int, Int>> {
+    private fun determineFulfillingEdges(): MutableList<Edge> {
         val adjMatrix = adjacencyMatrix
-        val fulfillingEdges = mutableListOf<Pair<Int, Int>>()
+        val fulfillingEdges = mutableListOf<Edge>()
         for (row in 1..order) {
             for (col in (row + 1)..order) {
                 val matrixCellValue = adjMatrix[row - 1][col - 1]
-                if (matrixCellValue == 0) fulfillingEdges.add(Pair(row, col))
+                if (matrixCellValue == 0) fulfillingEdges.add(Edge(row, col))
             }
         }
         return fulfillingEdges

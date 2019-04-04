@@ -1,4 +1,6 @@
+import edu.sperek.graphlab.Edge
 import edu.sperek.graphlab.GraphModel
+import edu.sperek.graphlab.Vertex
 import kotlin.Pair
 import spock.lang.Specification
 
@@ -7,24 +9,24 @@ class GraphMachineSpec extends Specification {
     GraphModel graphModel
 
     def setup() {
-        edges = [new Pair(1, 2), new Pair(2, 3), new Pair(3, 4), new Pair(1, 4), new Pair(2, 4)]
-        graphModel = new GraphModel(4, 5, edges as ArrayList<Pair<Integer, Integer>>)
+        edges = [new Edge(new Vertex(1), (new Vertex(2))), new Edge(new Vertex(2), (new Vertex(3))), new Edge(new Vertex(3), (new Vertex(4))), new Edge(new Vertex(1), (new Vertex(4))), new Edge(new Vertex(2), (new Vertex(4)))]
+        graphModel = new GraphModel(4, 5, edges as ArrayList<Edge>)
     }
 
-    def 'Should return the number of verticies'() {
+    def 'Should return the number of vertices'() {
         given: "a graph"
-        when: "user retrieves number of verts"
-        int verts = graphModel.order
+        when: "user retrieves number of vertices"
+        int vertices = graphModel.order
         then:
-        verts == 4
+        vertices == 4
     }
 
     def 'Should return list of vertices'() {
         given: "a graph"
         when: "user retrieves list of vertices"
-        def vertsList = graphModel.verticesList
+        def verticesList = graphModel.verticesList
         then:
-        vertsList == [1, 2, 3, 4]
+        verticesList == [new Vertex(1), new Vertex(2), new Vertex(3), new Vertex(4)]
     }
 
     def 'Should return the number of edges'() {
@@ -76,10 +78,10 @@ class GraphMachineSpec extends Specification {
         when: "user retrieves for vertices degrees"
         def verticesDegrees = graphModel.verticesDegrees
         def expectedDegrees = [
-                new Pair(1, 2),
-                new Pair(2, 3),
-                new Pair(3, 2),
-                new Pair(4, 3)
+                new Pair(new Vertex(1), 2),
+                new Pair(new Vertex(2), 3),
+                new Pair(new Vertex(3), 2),
+                new Pair(new Vertex(4), 3)
         ] as List<Pair>
         then:
         expectedDegrees == verticesDegrees
@@ -97,7 +99,7 @@ class GraphMachineSpec extends Specification {
 
     }
 
-    def 'Should check if graph is simple' () {
+    def 'Should check if graph is simple'() {
         given: "a graph"
         when: "user checks if graph is simple"
         def isSimple = graphModel.isSimple()
@@ -106,11 +108,11 @@ class GraphMachineSpec extends Specification {
         expected == isSimple
     }
 
-    def 'Should return needed edges to make complete graph ' () {
+    def 'Should return needed edges to make complete graph '() {
         given: "a graph"
         when: "user checks for edges needed to make complete graph"
         def fulfillingEdges = graphModel.fulfillingEdges
-        def expected = [new Pair(1,3)] as List<Pair>
+        def expected = [new Edge(1, 3)] as List<Edge>
         then:
         fulfillingEdges == expected
     }
