@@ -12,5 +12,4 @@ class GraphlabApplicationTests {
     @Test
     fun contextLoads() {
     }
-
 }
