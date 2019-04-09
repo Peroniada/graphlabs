@@ -1,6 +1,6 @@
 package edu.sperek.graphlab
 
-class Vertex(val position: Int){
+class Vertex(val position: Int) {
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

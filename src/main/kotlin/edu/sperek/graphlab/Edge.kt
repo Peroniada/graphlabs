@@ -8,10 +8,10 @@ class Edge(val start: Vertex, val end: Vertex) {
     val endPosition: Int
         get() = end.position
 
-    constructor(start: Int, end:Int): this(Vertex(start), Vertex(end))
+    constructor(start: Int, end: Int) : this(Vertex(start), Vertex(end))
 
-    fun contains(vertex: Vertex):Boolean {
-       return start == vertex || end == vertex
+    fun contains(vertex: Vertex): Boolean {
+        return start == vertex || end == vertex
     }
 
     override fun toString(): String {
@@ -35,6 +35,4 @@ class Edge(val start: Vertex, val end: Vertex) {
         result = 31 * result + end.hashCode()
         return result
     }
-
-
 }
