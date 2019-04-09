@@ -26,6 +26,40 @@ class GraphModel(val order: Int, val size: Int, private val edges: List<Edge>) {
     val fulfillingEdges: List<Edge>
         get() = determineFulfillingEdges()
 
+    val getNeighbors: Map<Vertex, Set<Vertex>>
+        get() = determineNeighbors()
+
+    private fun determineNeighbors(): Map<Vertex, Set<Vertex>> {
+        val neighbors: HashMap<Vertex, Set<Vertex>> = hashMapOf()
+        edges.forEach { edge ->
+            run {
+                addStartVertex(edge, neighbors)
+                addEndVertex(edge, neighbors)
+            }
+        }
+        return neighbors
+    }
+
+    private fun addStartVertex(edge: Edge, map: HashMap<Vertex, Set<Vertex>>) {
+        if (map.containsKey(edge.start)) {
+            val x = map[edge.start]!!.toMutableSet()
+            x += edge.end
+            map[edge.start] = x
+        } else {
+            map[edge.start] = mutableSetOf(edge.end)
+        }
+    }
+
+    private fun addEndVertex(edge: Edge, map: HashMap<Vertex, Set<Vertex>>) {
+        if (map.containsKey(edge.end)) {
+            val x = map[edge.end]!!.toMutableSet()
+            x += edge.start
+            map[edge.end] = x
+        } else {
+            map[edge.end] = mutableSetOf(edge.start)
+        }
+    }
+
     private fun fillAdjacencyOf(matrix: Array<Array<Int>>): Array<Array<Int>> {
         edges.forEach { edge ->
             run {

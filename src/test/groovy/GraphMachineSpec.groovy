@@ -116,4 +116,17 @@ class GraphMachineSpec extends Specification {
         then:
         fulfillingEdges == expected
     }
+
+    def 'Should return list of vertices with their neighbors'() {
+        given: "a graph"
+        when: "user checks map of vertices with neighbors"
+        def listOfNeighbors = graphModel.getNeighbors
+        Map<Vertex, Set<Vertex>> expected = new HashMap<>()
+        expected.put(new Vertex(1),[new Vertex(2), new Vertex(4)].toSet())
+        expected.put(new Vertex(2),[new Vertex(1), new Vertex(3), new Vertex(4)].toSet())
+        expected.put(new Vertex(3),[new Vertex(2), new Vertex(4)].toSet())
+        expected.put(new Vertex(4),[new Vertex(1), new Vertex(2), new Vertex(3)].toSet())
+        then:
+        listOfNeighbors == expected
+    }
 }
